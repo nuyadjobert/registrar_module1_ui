@@ -1,0 +1,47 @@
+<div class="page-header">
+  <h2>Students</h2>
+</div>
+
+@if (errorMessage) {
+  <div class="error-message">{{ errorMessage }}</div>
+}
+
+@if (loading) {
+  <div class="loading-wrapper">
+    <mat-spinner diameter="40"></mat-spinner>
+  </div>
+} @else {
+  <table mat-table [dataSource]="students" class="mat-elevation-z2 full-width">
+
+    <ng-container matColumnDef="student_number">
+      <th mat-header-cell *matHeaderCellDef>Student No.</th>
+      <td mat-cell *matCellDef="let item">{{ item.student_number }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef>Name</th>
+      <td mat-cell *matCellDef="let item">{{ item.name }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="course">
+      <th mat-header-cell *matHeaderCellDef>Course</th>
+      <td mat-cell *matCellDef="let item">{{ item.course }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef>Actions</th>
+      <td mat-cell *matCellDef="let item">
+        <button mat-raised-button color="primary" (click)="viewCOR(item.id)">
+          <mat-icon>description</mat-icon> COR
+        </button>
+        <button mat-raised-button color="accent" class="ml-8" (click)="viewTranscript(item.id)">
+          <mat-icon>school</mat-icon> Transcript
+        </button>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+  </table>
+}

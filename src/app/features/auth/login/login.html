@@ -1,0 +1,47 @@
+<div class="login-wrapper">
+  <mat-card class="login-card">
+    <mat-card-header>
+      <mat-icon class="logo-icon">school</mat-icon>
+      <mat-card-title>Registrar Portal</mat-card-title>
+      <mat-card-subtitle>Sign in to your account</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      @if (errorMessage) {
+        <div class="error-message">
+          <mat-icon style="font-size:18px;width:18px;height:18px;">error</mat-icon>
+          {{ errorMessage }}
+        </div>
+      }
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Email</mat-label>
+        <input matInput type="email" [(ngModel)]="email" placeholder="admin@school.edu" />
+        <mat-icon matSuffix>email</mat-icon>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Password</mat-label>
+        <input matInput [type]="hidePassword ? 'password' : 'text'" [(ngModel)]="password" />
+        <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword">
+          <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+        </button>
+      </mat-form-field>
+    </mat-card-content>
+
+    <mat-card-actions>
+      <button mat-raised-button
+              color="primary"
+              class="sign-in-btn"
+              type="button"
+              [disabled]="loading"
+              (click)="login()">
+        @if (loading) {
+          <mat-spinner diameter="24" style="margin: 0 auto;"></mat-spinner>
+        } @else {
+          Sign In
+        }
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</div>
