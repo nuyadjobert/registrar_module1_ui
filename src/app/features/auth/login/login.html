@@ -1,10 +1,13 @@
 <div class="login-wrapper">
   <mat-card class="login-card">
-    <mat-card-header>
-      <mat-icon class="logo-icon">school</mat-icon>
-      <mat-card-title>Registrar Portal</mat-card-title>
-      <mat-card-subtitle>Sign in to your account</mat-card-subtitle>
-    </mat-card-header>
+
+    <div class="login-header">
+      <div class="school-logo">
+        <mat-icon>school</mat-icon>
+      </div>
+      <h1>Registrar Portal</h1>
+      <p>SCHOOL MANAGEMENT SYSTEM</p>
+    </div>
 
     <mat-card-content>
       @if (errorMessage) {
@@ -15,7 +18,7 @@
       }
 
       <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Email</mat-label>
+        <mat-label>Email Address</mat-label>
         <input matInput type="email" [(ngModel)]="email" placeholder="admin@school.edu" />
         <mat-icon matSuffix>email</mat-icon>
       </mat-form-field>
@@ -31,7 +34,6 @@
 
     <mat-card-actions>
       <button mat-raised-button
-              color="primary"
               class="sign-in-btn"
               type="button"
               [disabled]="loading"
@@ -43,5 +45,6 @@
         }
       </button>
     </mat-card-actions>
+
   </mat-card>
 </div>

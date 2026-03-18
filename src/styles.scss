@@ -1,38 +1,139 @@
-
-// Include theming for Angular Material with `mat.theme()`.
-// This Sass mixin will define CSS variables that are used for styling Angular Material
-// components according to the Material 3 design spec.
-// Learn more about theming and how to use it for your application's
-// custom components at https://material.angular.dev/guide/theming
 @use '@angular/material' as mat;
 
-html {
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
   height: 100%;
-  @include mat.theme((
-    color: (
-      primary: mat.$azure-palette,
-      tertiary: mat.$blue-palette,
-    ),
-    typography: Roboto,
-    density: 0,
-  ));
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 body {
-  // Default the application to a light color theme. This can be changed to
-  // `dark` to enable the dark color theme, or to `light dark` to defer to the
-  // user's system settings.
-  color-scheme: light;
-
-  // Set a default background, font and text colors for the application using
-  // Angular Material's system-level CSS variables. Learn more about these
-  // variables at https://material.angular.dev/guide/system-variables
-  background-color: var(--mat-sys-surface);
-  color: var(--mat-sys-on-surface);
-  font: var(--mat-sys-body-medium);
-
-  // Reset the user agent margin.
-  margin: 0;
-  height: 100%;
+  background-color: #eef2f7;
+  color: #333;
 }
-/* You can add global styles to this file, and also import other style files */
+
+// Global table styles
+.mat-mdc-table {
+  border-radius: 8px !important;
+  overflow: hidden;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08) !important;
+}
+
+.mat-mdc-header-row {
+  background-color: #1a3a5c !important;
+}
+
+.mat-mdc-header-cell {
+  color: white !important;
+  font-weight: 600 !important;
+  font-size: 13px !important;
+  letter-spacing: 0.3px;
+}
+
+.mat-mdc-row {
+  background-color: white !important;
+}
+
+.mat-mdc-row:hover {
+  background-color: #f0f4ff !important;
+  transition: background-color 0.15s ease;
+}
+
+.mat-mdc-row:nth-child(even) {
+  background-color: #fafbfd !important;
+}
+
+.mat-mdc-cell {
+  color: #444 !important;
+  font-size: 14px !important;
+}
+
+// Global page header
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 14px;
+  border-bottom: 2px solid #1a3a5c;
+
+  h2 {
+    margin: 0;
+    font-size: 22px;
+    font-weight: 700;
+    color: #1a3a5c;
+  }
+}
+
+// Global error message
+.error-message {
+  background-color: #fff0f0;
+  color: #c62828;
+  padding: 10px 16px;
+  border-radius: 6px;
+  margin-bottom: 16px;
+  font-size: 14px;
+  border-left: 4px solid #e53935;
+}
+
+// Global loading wrapper
+.loading-wrapper {
+  display: flex;
+  justify-content: center;
+  padding: 48px;
+}
+
+// Global full width
+.full-width {
+  width: 100%;
+}
+
+// Global margin left
+.ml-8 {
+  margin-left: 8px;
+}
+
+// Status text
+.status-text {
+  font-size: 14px;
+  color: #888;
+  font-style: italic;
+}
+
+// Custom dialog panel
+.custom-dialog .mat-mdc-dialog-surface {
+  border-radius: 12px !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+}
+
+// Add button style
+button[mat-raised-button][color="primary"] {
+  background-color: #1a3a5c !important;
+  color: white !important;
+  border-radius: 6px !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.3px !important;
+}
+
+// Icon buttons
+button[mat-icon-button][color="primary"] mat-icon {
+  color: #1a3a5c !important;
+}
+
+button[mat-icon-button][color="warn"] mat-icon {
+  color: #e53935 !important;
+}
+
+// Content wrapper
+.content-wrapper {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(26, 58, 92, 0.08);
+}

@@ -18,39 +18,67 @@ import { SectionService } from '../../../core/services/section';
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
+    MatIconModule,
   ],
   template: `
-    <h2 mat-dialog-title>{{ data.isEdit ? 'Edit Section' : 'Add Section' }}</h2>
+    <div class="dialog-header">
+      <mat-icon>class</mat-icon>
+      <h2>{{ data.isEdit ? 'Edit Section' : 'Add Section' }}</h2>
+    </div>
     <mat-dialog-content>
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Section Name</mat-label>
+        <mat-icon matPrefix>tag</mat-icon>
         <input matInput [(ngModel)]="form.section_name" placeholder="e.g. BSCS-1A" />
       </mat-form-field>
-
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Subject ID</mat-label>
+        <mat-icon matPrefix>book</mat-icon>
         <input matInput type="number" [(ngModel)]="form.subject_id" placeholder="e.g. 1" />
       </mat-form-field>
-
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Capacity</mat-label>
+        <mat-icon matPrefix>people</mat-icon>
         <input matInput type="number" [(ngModel)]="form.capacity" placeholder="e.g. 40" />
       </mat-form-field>
     </mat-dialog-content>
     <mat-dialog-actions align="end">
-      <button mat-button mat-dialog-close>Cancel</button>
+      <button mat-stroked-button mat-dialog-close>
+        <mat-icon>close</mat-icon> Cancel
+      </button>
       <button mat-raised-button color="primary" (click)="submit()">
+        <mat-icon>{{ data.isEdit ? 'save' : 'add' }}</mat-icon>
         {{ data.isEdit ? 'Update' : 'Create' }}
       </button>
     </mat-dialog-actions>
     <style>
+      .dialog-header {
+        background: #0d2137;
+        color: white;
+        padding: 16px 24px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        border-radius: 12px 12px 0 0;
+      }
+      .dialog-header h2 { margin: 0; font-size: 18px; font-weight: 600; }
+      .dialog-header mat-icon { font-size: 22px; width: 22px; height: 22px; }
       .full-width { width: 100%; margin-bottom: 8px; }
-      mat-dialog-content { display: flex; flex-direction: column; min-width: 400px; padding-top: 16px; }
+      mat-dialog-content {
+        display: flex;
+        flex-direction: column;
+        min-width: 420px;
+        padding: 24px 24px 8px !important;
+      }
+      mat-dialog-actions {
+        padding: 12px 24px 20px !important;
+        border-top: 1px solid #e0e0e0;
+      }
     </style>
   `
 })
 export class SectionDialog {
-  form = {
+  form: any = {
     section_name: '',
     subject_id: null,
     capacity: null,
@@ -104,7 +132,7 @@ export class SectionList implements OnInit {
     try {
       this.sections = await this.sectionService.getAll();
     } catch (error: any) {
-      this.errorMessage = 'Failed to load sections. Please try again.';
+      this.errorMessage = 'Failed to load sections.';
     } finally {
       this.loading = false;
     }
@@ -112,7 +140,8 @@ export class SectionList implements OnInit {
 
   openAddDialog() {
     const dialogRef = this.dialog.open(SectionDialog, {
-      data: { isEdit: false }
+      data: { isEdit: false },
+      panelClass: 'custom-dialog'
     });
     dialogRef.afterClosed().subscribe(async result => {
       if (result) {
@@ -128,7 +157,8 @@ export class SectionList implements OnInit {
 
   openEditDialog(section: any) {
     const dialogRef = this.dialog.open(SectionDialog, {
-      data: { isEdit: true, section }
+      data: { isEdit: true, section },
+      panelClass: 'custom-dialog'
     });
     dialogRef.afterClosed().subscribe(async result => {
       if (result) {
