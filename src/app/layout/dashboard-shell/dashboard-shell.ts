@@ -28,8 +28,10 @@ export class DashboardShellComponent {
     { label: 'Courses',     icon: 'menu_book',   route: '/dashboard/courses'     },
     { label: 'Curriculum',  icon: 'library_books',route: '/dashboard/curriculum'  },
     { label: 'Sections',    icon: 'class',        route: '/dashboard/sections'    },
+    { label: 'Subjects', icon: 'book', route: '/dashboard/subjects' },
     { label: 'Enrollments', icon: 'how_to_reg',   route: '/dashboard/enrollments' },
     { label: 'Students',    icon: 'people',       route: '/dashboard/students'    },
+    
   ];
 
   constructor(private router: Router) {}

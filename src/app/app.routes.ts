@@ -44,6 +44,11 @@ export const routes: Routes = [
           import('./features/students/student-list/student-list').then(m => m.StudentList)
       },
       {
+    path: 'subjects',
+    loadComponent: () =>
+        import('./features/subjects/subject-list/subject-list').then(m => m.SubjectList)
+},
+      {
         path: '',
         redirectTo: 'courses',
         pathMatch: 'full'
