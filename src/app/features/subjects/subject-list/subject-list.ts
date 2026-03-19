@@ -2,10 +2,12 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatChipsModule } from '@angular/material/chips';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatDialogModule, MatDialog, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
 import { FormsModule } from '@angular/forms';
 import { SubjectService } from '../../../core/services/subject';
 
@@ -17,6 +19,7 @@ import { SubjectService } from '../../../core/services/subject';
     MatDialogModule,
     MatFormFieldModule,
     MatInputModule,
+    MatSelectModule,
     MatButtonModule,
     MatIconModule,
   ],
@@ -31,15 +34,36 @@ import { SubjectService } from '../../../core/services/subject';
         <mat-icon matPrefix>tag</mat-icon>
         <input matInput [(ngModel)]="form.subject_code" placeholder="e.g. CS101" />
       </mat-form-field>
+
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Subject Name</mat-label>
         <mat-icon matPrefix>title</mat-icon>
         <input matInput [(ngModel)]="form.subject_name" placeholder="e.g. Introduction to Computing" />
       </mat-form-field>
+
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Units</mat-label>
         <mat-icon matPrefix>numbers</mat-icon>
         <input matInput type="number" [(ngModel)]="form.units" placeholder="e.g. 3" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Subject Type</mat-label>
+        <mat-icon matPrefix>category</mat-icon>
+        <mat-select [(ngModel)]="form.type">
+          <mat-option value="Lecture">Lecture</mat-option>
+          <mat-option value="Laboratory">Laboratory</mat-option>
+          <mat-option value="Lecture & Lab">Lecture & Lab</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Status</mat-label>
+        <mat-icon matPrefix>info</mat-icon>
+        <mat-select [(ngModel)]="form.status">
+          <mat-option value="Active">Active</mat-option>
+          <mat-option value="Inactive">Inactive</mat-option>
+        </mat-select>
       </mat-form-field>
     </mat-dialog-content>
     <mat-dialog-actions align="end">
@@ -53,7 +77,7 @@ import { SubjectService } from '../../../core/services/subject';
     </mat-dialog-actions>
     <style>
       .dialog-header {
-        background: #0d2137;
+        background: #1a3a5c;
         color: white;
         padding: 16px 24px;
         display: flex;
@@ -61,22 +85,16 @@ import { SubjectService } from '../../../core/services/subject';
         gap: 10px;
         border-radius: 12px 12px 0 0;
       }
-      .dialog-header h2 {
-        margin: 0;
-        font-size: 18px;
-        font-weight: 600;
-      }
-      .dialog-header mat-icon {
-        font-size: 22px;
-        width: 22px;
-        height: 22px;
-      }
+      .dialog-header h2 { margin: 0; font-size: 18px; font-weight: 600; }
+      .dialog-header mat-icon { font-size: 22px; width: 22px; height: 22px; }
       .full-width { width: 100%; margin-bottom: 8px; }
       mat-dialog-content {
         display: flex;
         flex-direction: column;
-        min-width: 420px;
+        min-width: 440px;
         padding: 24px 24px 8px !important;
+        max-height: 65vh;
+        overflow-y: auto;
       }
       mat-dialog-actions {
         padding: 12px 24px 20px !important;
@@ -86,10 +104,12 @@ import { SubjectService } from '../../../core/services/subject';
   `
 })
 export class SubjectDialog {
-  form = {
+  form: any = {
     subject_code: '',
     subject_name: '',
     units: 0,
+    type: 'Lecture',
+    status: 'Active',
   };
 
   constructor(
@@ -113,17 +133,24 @@ export class SubjectDialog {
     MatTableModule,
     MatButtonModule,
     MatIconModule,
+    MatChipsModule,
     MatProgressSpinnerModule,
     MatDialogModule,
+    MatFormFieldModule,
+    MatInputModule,
+    FormsModule,
   ],
   templateUrl: './subject-list.html',
   styleUrl: './subject-list.scss'
 })
 export class SubjectList implements OnInit {
-  displayedColumns = ['subject_code', 'subject_name', 'units', 'actions'];
+  displayedColumns = ['subject_code', 'subject_name', 'units', 'type', 'status', 'actions'];
   subjects: any[] = [];
+  filteredSubjects: any[] = [];
   loading = false;
   errorMessage = '';
+  searchText = '';
+  showSearch = false;
 
   constructor(
     private subjectService: SubjectService,
@@ -139,10 +166,42 @@ export class SubjectList implements OnInit {
     this.errorMessage = '';
     try {
       this.subjects = await this.subjectService.getAll();
+      this.filteredSubjects = this.subjects;
     } catch (error: any) {
-      this.errorMessage = 'Failed to load subjects. Please try again.';
+      this.errorMessage = 'Failed to load subjects.';
     } finally {
       this.loading = false;
+    }
+  }
+
+  search() {
+    const text = this.searchText.toLowerCase();
+    this.filteredSubjects = this.subjects.filter(s =>
+      s.subject_code?.toLowerCase().includes(text) ||
+      s.subject_name?.toLowerCase().includes(text) ||
+      s.type?.toLowerCase().includes(text) ||
+      s.status?.toLowerCase().includes(text)
+    );
+  }
+
+  toggleSearch() {
+    this.showSearch = !this.showSearch;
+    if (!this.showSearch) {
+      this.searchText = '';
+      this.filteredSubjects = this.subjects;
+    }
+  }
+
+  getStatusColor(status: string) {
+    return status === 'Active' ? 'primary' : 'warn';
+  }
+
+  getTypeColor(type: string) {
+    switch(type) {
+      case 'Lecture': return 'primary';
+      case 'Laboratory': return 'accent';
+      case 'Lecture & Lab': return undefined;
+      default: return undefined;
     }
   }
 

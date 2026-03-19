@@ -10,6 +10,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { FormsModule } from '@angular/forms';
 import { CurriculumService } from '../../../core/services/curriculum';
+import { CourseService } from '../../../core/services/course';
+import { SubjectService } from '../../../core/services/subject';
 
 @Component({
   selector: 'app-curriculum-dialog',
@@ -30,15 +32,29 @@ import { CurriculumService } from '../../../core/services/curriculum';
     </div>
     <mat-dialog-content>
       <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Course ID</mat-label>
+        <mat-label>Course</mat-label>
         <mat-icon matPrefix>menu_book</mat-icon>
-        <input matInput type="number" [(ngModel)]="form.course_id" placeholder="e.g. 1" />
+        <mat-select [(ngModel)]="form.course_id">
+          @for (course of data.courses; track course.id) {
+            <mat-option [value]="course.id">
+              {{ course.course_code }} - {{ course.course_name }}
+            </mat-option>
+          }
+        </mat-select>
       </mat-form-field>
+
       <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Subject ID</mat-label>
+        <mat-label>Subject</mat-label>
         <mat-icon matPrefix>book</mat-icon>
-        <input matInput type="number" [(ngModel)]="form.subject_id" placeholder="e.g. 1" />
+        <mat-select [(ngModel)]="form.subject_id">
+          @for (subject of data.subjects; track subject.id) {
+            <mat-option [value]="subject.id">
+              {{ subject.subject_code }} - {{ subject.subject_name }}
+            </mat-option>
+          }
+        </mat-select>
       </mat-form-field>
+
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Year Level</mat-label>
         <mat-icon matPrefix>school</mat-icon>
@@ -49,13 +65,32 @@ import { CurriculumService } from '../../../core/services/curriculum';
           <mat-option [value]="4">4th Year</mat-option>
         </mat-select>
       </mat-form-field>
+
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Semester</mat-label>
-        <mat-icon matPrefix>calendar_today</mat-icon>
+        <mat-icon matPrefix>event</mat-icon>
         <mat-select [(ngModel)]="form.semester">
           <mat-option [value]="1">1st Semester</mat-option>
           <mat-option [value]="2">2nd Semester</mat-option>
-          <mat-option value="Summer">Summer</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>School Year</mat-label>
+        <mat-icon matPrefix>calendar_today</mat-icon>
+        <mat-select [(ngModel)]="form.school_year">
+          <mat-option value="2024-2025">2024-2025</mat-option>
+          <mat-option value="2025-2026">2025-2026</mat-option>
+          <mat-option value="2026-2027">2026-2027</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Status</mat-label>
+        <mat-icon matPrefix>info</mat-icon>
+        <mat-select [(ngModel)]="form.status">
+          <mat-option value="Active">Active</mat-option>
+          <mat-option value="Inactive">Inactive</mat-option>
         </mat-select>
       </mat-form-field>
     </mat-dialog-content>
@@ -70,7 +105,7 @@ import { CurriculumService } from '../../../core/services/curriculum';
     </mat-dialog-actions>
     <style>
       .dialog-header {
-        background: #0d2137;
+        background: #1a3a5c;
         color: white;
         padding: 16px 24px;
         display: flex;
@@ -84,8 +119,10 @@ import { CurriculumService } from '../../../core/services/curriculum';
       mat-dialog-content {
         display: flex;
         flex-direction: column;
-        min-width: 420px;
+        min-width: 440px;
         padding: 24px 24px 8px !important;
+        max-height: 65vh;
+        overflow-y: auto;
       }
       mat-dialog-actions {
         padding: 12px 24px 20px !important;
@@ -100,6 +137,8 @@ export class CurriculumDialog {
     subject_id: null,
     year_level: null,
     semester: null,
+    school_year: '2025-2026',
+    status: 'Active',
   };
 
   constructor(
@@ -126,23 +165,35 @@ export class CurriculumDialog {
     MatChipsModule,
     MatProgressSpinnerModule,
     MatDialogModule,
+    MatFormFieldModule,
+    MatInputModule,
+    FormsModule,
   ],
   templateUrl: './curriculum-list.html',
   styleUrl: './curriculum-list.scss'
 })
 export class CurriculumList implements OnInit {
-  displayedColumns = ['course_id', 'subject_id', 'year_level', 'semester', 'actions'];
+  displayedColumns = ['course_name', 'subject_name', 'year_level', 'semester', 'school_year', 'status', 'actions'];
   curriculums: any[] = [];
+  filteredCurriculums: any[] = [];
+  courses: any[] = [];
+  subjects: any[] = [];
   loading = false;
   errorMessage = '';
+  searchText = '';
+  showSearch = false;
 
   constructor(
     private curriculumService: CurriculumService,
+    private courseService: CourseService,
+    private subjectService: SubjectService,
     private dialog: MatDialog
   ) {}
 
   async ngOnInit() {
     await this.loadCurriculums();
+    await this.loadCourses();
+    await this.loadSubjects();
   }
 
   async loadCurriculums() {
@@ -150,6 +201,7 @@ export class CurriculumList implements OnInit {
     this.errorMessage = '';
     try {
       this.curriculums = await this.curriculumService.getAll();
+      this.filteredCurriculums = this.curriculums;
     } catch (error: any) {
       this.errorMessage = 'Failed to load curriculum.';
     } finally {
@@ -157,9 +209,51 @@ export class CurriculumList implements OnInit {
     }
   }
 
+  async loadCourses() {
+    try {
+      this.courses = await this.courseService.getAll();
+    } catch (error) {
+      console.error('Failed to load courses');
+    }
+  }
+
+  async loadSubjects() {
+    try {
+      this.subjects = await this.subjectService.getAll();
+    } catch (error) {
+      console.error('Failed to load subjects');
+    }
+  }
+
+  search() {
+    const text = this.searchText.toLowerCase();
+    this.filteredCurriculums = this.curriculums.filter(c =>
+      c.course?.course_name?.toLowerCase().includes(text) ||
+      c.subject?.subject_name?.toLowerCase().includes(text) ||
+      c.school_year?.toLowerCase().includes(text) ||
+      c.status?.toLowerCase().includes(text)
+    );
+  }
+
+  toggleSearch() {
+    this.showSearch = !this.showSearch;
+    if (!this.showSearch) {
+      this.searchText = '';
+      this.filteredCurriculums = this.curriculums;
+    }
+  }
+
+  getStatusColor(status: string) {
+    return status === 'Active' ? 'primary' : 'warn';
+  }
+
+  getSemesterLabel(semester: number) {
+    return semester === 1 ? '1st Semester' : '2nd Semester';
+  }
+
   openAddDialog() {
     const dialogRef = this.dialog.open(CurriculumDialog, {
-      data: { isEdit: false },
+      data: { isEdit: false, courses: this.courses, subjects: this.subjects },
       panelClass: 'custom-dialog'
     });
     dialogRef.afterClosed().subscribe(async result => {
@@ -176,7 +270,7 @@ export class CurriculumList implements OnInit {
 
   openEditDialog(curriculum: any) {
     const dialogRef = this.dialog.open(CurriculumDialog, {
-      data: { isEdit: true, curriculum },
+      data: { isEdit: true, curriculum, courses: this.courses, subjects: this.subjects },
       panelClass: 'custom-dialog'
     });
     dialogRef.afterClosed().subscribe(async result => {

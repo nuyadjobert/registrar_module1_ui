@@ -34,20 +34,51 @@ import { CourseService } from '../../../core/services/course';
         <mat-icon matPrefix>tag</mat-icon>
         <input matInput [(ngModel)]="form.course_code" placeholder="e.g. BSCS" />
       </mat-form-field>
+
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Course Name</mat-label>
         <mat-icon matPrefix>title</mat-icon>
         <input matInput [(ngModel)]="form.course_name" placeholder="e.g. BS Computer Science" />
       </mat-form-field>
+
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Units</mat-label>
         <mat-icon matPrefix>numbers</mat-icon>
         <input matInput type="number" [(ngModel)]="form.units" placeholder="e.g. 3" />
       </mat-form-field>
+
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Department</mat-label>
         <mat-icon matPrefix>business</mat-icon>
         <input matInput [(ngModel)]="form.department" placeholder="e.g. BSCS" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Course Type</mat-label>
+        <mat-icon matPrefix>category</mat-icon>
+        <mat-select [(ngModel)]="form.type">
+          <mat-option value="Major">Major</mat-option>
+          <mat-option value="Minor">Minor</mat-option>
+          <mat-option value="Elective">Elective</mat-option>
+          <mat-option value="General Education">General Education</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Status</mat-label>
+        <mat-icon matPrefix>info</mat-icon>
+        <mat-select [(ngModel)]="form.status">
+          <mat-option value="Active">Active</mat-option>
+          <mat-option value="Inactive">Inactive</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Description</mat-label>
+        <mat-icon matPrefix>description</mat-icon>
+        <textarea matInput [(ngModel)]="form.description"
+                  placeholder="Brief description of the course..."
+                  rows="3"></textarea>
       </mat-form-field>
     </mat-dialog-content>
     <mat-dialog-actions align="end">
@@ -61,7 +92,7 @@ import { CourseService } from '../../../core/services/course';
     </mat-dialog-actions>
     <style>
       .dialog-header {
-        background: #0d2137;
+        background: #1a3a5c;
         color: white;
         padding: 16px 24px;
         display: flex;
@@ -75,8 +106,10 @@ import { CourseService } from '../../../core/services/course';
       mat-dialog-content {
         display: flex;
         flex-direction: column;
-        min-width: 420px;
+        min-width: 440px;
         padding: 24px 24px 8px !important;
+        max-height: 65vh;
+        overflow-y: auto;
       }
       mat-dialog-actions {
         padding: 12px 24px 20px !important;
@@ -86,11 +119,14 @@ import { CourseService } from '../../../core/services/course';
   `
 })
 export class CourseDialog {
-  form = {
+  form: any = {
     course_code: '',
     course_name: '',
     units: 0,
     department: '',
+    status: 'Active',
+    type: 'Major',
+    description: '',
   };
 
   constructor(
@@ -117,15 +153,21 @@ export class CourseDialog {
     MatChipsModule,
     MatProgressSpinnerModule,
     MatDialogModule,
+    MatFormFieldModule,
+    MatInputModule,
+    FormsModule,
   ],
   templateUrl: './course-list.html',
   styleUrl: './course-list.scss'
 })
 export class CourseList implements OnInit {
-  displayedColumns = ['course_code', 'course_name', 'units', 'department', 'actions'];
+  displayedColumns = ['course_code', 'course_name', 'units', 'department', 'type', 'status', 'actions'];
   courses: any[] = [];
+  filteredCourses: any[] = [];
   loading = false;
   errorMessage = '';
+  searchText = '';
+  showSearch = false;
 
   constructor(
     private courseService: CourseService,
@@ -141,10 +183,43 @@ export class CourseList implements OnInit {
     this.errorMessage = '';
     try {
       this.courses = await this.courseService.getAll();
+      this.filteredCourses = this.courses;
     } catch (error: any) {
-      this.errorMessage = 'Failed to load courses. Please try again.';
+      this.errorMessage = 'Failed to load courses.';
     } finally {
       this.loading = false;
+    }
+  }
+
+  search() {
+    const text = this.searchText.toLowerCase();
+    this.filteredCourses = this.courses.filter(c =>
+      c.course_code?.toLowerCase().includes(text) ||
+      c.course_name?.toLowerCase().includes(text) ||
+      c.department?.toLowerCase().includes(text) ||
+      c.type?.toLowerCase().includes(text) ||
+      c.status?.toLowerCase().includes(text)
+    );
+  }
+
+  toggleSearch() {
+    this.showSearch = !this.showSearch;
+    if (!this.showSearch) {
+      this.searchText = '';
+      this.filteredCourses = this.courses;
+    }
+  }
+
+  getStatusColor(status: string) {
+    return status === 'Active' ? 'primary' : 'warn';
+  }
+
+  getTypeColor(type: string) {
+    switch(type) {
+      case 'Major': return 'primary';
+      case 'Minor': return 'accent';
+      case 'Elective': return 'warn';
+      default: return undefined;
     }
   }
 

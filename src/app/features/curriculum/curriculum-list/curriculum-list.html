@@ -1,55 +1,100 @@
-<div class="page-header">
-  <h2>Curriculum</h2>
-  <button mat-raised-button color="primary" (click)="openAddDialog()">
-    <mat-icon>add</mat-icon> Add Curriculum
-  </button>
-</div>
-
-@if (errorMessage) {
-  <div class="error-message">{{ errorMessage }}</div>
-}
-
-@if (loading) {
-  <div class="loading-wrapper">
-    <mat-spinner diameter="40"></mat-spinner>
+<div class="content-wrapper">
+  <div class="page-header">
+    <h2>Curriculum</h2>
+    <div style="display: flex; align-items: center; gap: 8px;">
+      @if (showSearch) {
+        <mat-form-field appearance="outline" style="width: 280px; margin: 0;">
+          <input matInput [(ngModel)]="searchText" (input)="search()"
+                 placeholder="Search curriculum..." />
+          <button mat-icon-button matSuffix (click)="toggleSearch()">
+            <mat-icon>close</mat-icon>
+          </button>
+        </mat-form-field>
+      } @else {
+        <button mat-icon-button (click)="toggleSearch()" title="Search"
+                style="color: #1a3a5c;">
+          <mat-icon>search</mat-icon>
+        </button>
+      }
+      <button mat-raised-button color="primary" (click)="openAddDialog()">
+        <mat-icon>add</mat-icon> Add Curriculum
+      </button>
+    </div>
   </div>
-} @else {
-  <table mat-table [dataSource]="curriculums" class="mat-elevation-z2 full-width">
 
-    <ng-container matColumnDef="course_id">
-      <th mat-header-cell *matHeaderCellDef>Course ID</th>
-      <td mat-cell *matCellDef="let item">{{ item.course_id }}</td>
-    </ng-container>
+  @if (errorMessage) {
+    <div class="error-message">{{ errorMessage }}</div>
+  }
 
-    <ng-container matColumnDef="subject_id">
-      <th mat-header-cell *matHeaderCellDef>Subject ID</th>
-      <td mat-cell *matCellDef="let item">{{ item.subject_id }}</td>
-    </ng-container>
+  @if (loading) {
+    <div class="loading-wrapper">
+      <mat-spinner diameter="40"></mat-spinner>
+    </div>
+  } @else {
+    <table mat-table [dataSource]="filteredCurriculums" class="mat-elevation-z2 full-width">
 
-    <ng-container matColumnDef="year_level">
-      <th mat-header-cell *matHeaderCellDef>Year Level</th>
-      <td mat-cell *matCellDef="let item">Year {{ item.year_level }}</td>
-    </ng-container>
+      <ng-container matColumnDef="course_name">
+        <th mat-header-cell *matHeaderCellDef>Course</th>
+        <td mat-cell *matCellDef="let item">
+          <strong>{{ item.course?.course_name }}</strong>
+          <div style="font-size: 11px; color: #888;">{{ item.course?.course_code }}</div>
+        </td>
+      </ng-container>
 
-    <ng-container matColumnDef="semester">
-      <th mat-header-cell *matHeaderCellDef>Semester</th>
-      <td mat-cell *matCellDef="let item">{{ item.semester }}</td>
-    </ng-container>
+      <ng-container matColumnDef="subject_name">
+        <th mat-header-cell *matHeaderCellDef>Subject</th>
+        <td mat-cell *matCellDef="let item">
+          {{ item.subject?.subject_name }}
+          <div style="font-size: 11px; color: #888;">{{ item.subject?.subject_code }}</div>
+        </td>
+      </ng-container>
 
-    <ng-container matColumnDef="actions">
-      <th mat-header-cell *matHeaderCellDef>Actions</th>
-      <td mat-cell *matCellDef="let item">
-        <button mat-icon-button color="primary" (click)="openEditDialog(item)">
-          <mat-icon>edit</mat-icon>
-        </button>
-        <button mat-icon-button color="warn" (click)="deleteCurriculum(item.id)">
-          <mat-icon>delete</mat-icon>
-        </button>
-      </td>
-    </ng-container>
+      <ng-container matColumnDef="year_level">
+        <th mat-header-cell *matHeaderCellDef>Year Level</th>
+        <td mat-cell *matCellDef="let item">Year {{ item.year_level }}</td>
+      </ng-container>
 
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      <ng-container matColumnDef="semester">
+        <th mat-header-cell *matHeaderCellDef>Semester</th>
+        <td mat-cell *matCellDef="let item">{{ getSemesterLabel(item.semester) }}</td>
+      </ng-container>
 
-  </table>
-}
+      <ng-container matColumnDef="school_year">
+        <th mat-header-cell *matHeaderCellDef>School Year</th>
+        <td mat-cell *matCellDef="let item">{{ item.school_year }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef>Status</th>
+        <td mat-cell *matCellDef="let item">
+          <mat-chip [color]="getStatusColor(item.status)" highlighted>
+            {{ item.status }}
+          </mat-chip>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Actions</th>
+        <td mat-cell *matCellDef="let item">
+          <button mat-icon-button color="primary" (click)="openEditDialog(item)">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button color="warn" (click)="deleteCurriculum(item.id)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+    </table>
+
+    @if (filteredCurriculums.length === 0) {
+      <div style="text-align: center; padding: 40px; color: #888;">
+        <mat-icon style="font-size: 48px; width: 48px; height: 48px;">inbox</mat-icon>
+        <p style="margin-top: 8px;">No curriculum found</p>
+      </div>
+    }
+  }
+</div>
