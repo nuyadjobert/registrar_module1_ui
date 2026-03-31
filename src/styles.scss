@@ -1,4 +1,12 @@
 @use '@angular/material' as mat;
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap');
+
+// Theme Color Variables
+$cyber-green: #00E676;
+$bg-dark: #080808;
+$panel-dark: #121212;
+$panel-light: #1a1a1a;
+$text-dim: rgba(255, 255, 255, 0.7);
 
 * {
   box-sizing: border-box;
@@ -8,132 +16,171 @@
 
 html, body {
   height: 100%;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  // Use Roboto Mono for that technical/terminal feel
+  font-family: 'Roboto Mono', 'Segoe UI', monospace;
+  background-color: $bg-dark;
+  color: white;
 }
 
-body {
-  background-color: #eef2f7;
-  color: #333;
-}
-
-// Global table styles
-.mat-mdc-table {
-  border-radius: 8px !important;
+/* --- Content Wrapper (The Main Card) --- */
+.content-wrapper {
+  background: $panel-dark !important;
+  border-radius: 8px;
+  padding: 24px;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(0, 230, 118, 0.15);
+  position: relative;
   overflow: hidden;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.08) !important;
+
+  // Subtle grid background effect
+  &::before {
+    content: '';
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background-image: linear-gradient(rgba(0, 230, 118, 0.03) 1px, transparent 1px),
+                      linear-gradient(90deg, rgba(0, 230, 118, 0.03) 1px, transparent 1px);
+    background-size: 30px 30px;
+    pointer-events: none;
+  }
 }
 
-.mat-mdc-header-row {
-  background-color: #1a3a5c !important;
+/* --- Global Table Styles --- */
+::ng-deep {
+  .mat-mdc-table {
+    background: transparent !important;
+    border-radius: 4px !important;
+    overflow: hidden;
+  }
+
+  .mat-mdc-header-row {
+    background-color: $panel-light !important;
+  }
+
+  .mat-mdc-header-cell {
+    color: $cyber-green !important;
+    font-weight: 700 !important;
+    text-transform: uppercase;
+    font-size: 12px !important;
+    letter-spacing: 1.5px;
+    border-bottom: 2px solid rgba(0, 230, 118, 0.2) !important;
+  }
+
+  .mat-mdc-row {
+    background-color: transparent !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background-color: rgba(0, 230, 118, 0.05) !important;
+    }
+  }
+
+  .mat-mdc-cell {
+    color: $text-dim !important;
+    font-size: 14px !important;
+    padding: 16px !important;
+  }
+
+  // Highlight the Course Code specifically
+  .mat-column-course_code {
+    color: white !important;
+    font-weight: 700;
+  }
 }
 
-.mat-mdc-header-cell {
-  color: white !important;
-  font-weight: 600 !important;
-  font-size: 13px !important;
-  letter-spacing: 0.3px;
-}
-
-.mat-mdc-row {
-  background-color: white !important;
-}
-
-.mat-mdc-row:hover {
-  background-color: #f0f4ff !important;
-  transition: background-color 0.15s ease;
-}
-
-.mat-mdc-row:nth-child(even) {
-  background-color: #fafbfd !important;
-}
-
-.mat-mdc-cell {
-  color: #444 !important;
-  font-size: 14px !important;
-}
-
-// Global page header
+/* --- Page Header --- */
 .page-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
-  padding-bottom: 14px;
-  border-bottom: 2px solid #1a3a5c;
+  margin-bottom: 25px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid rgba(0, 230, 118, 0.3);
 
   h2 {
     margin: 0;
-    font-size: 22px;
+    font-size: 24px;
     font-weight: 700;
-    color: #1a3a5c;
+    color: white;
+    letter-spacing: 1px;
+    &::before {
+      content: '> ';
+      color: $cyber-green;
+    }
   }
 }
 
-// Global error message
-.error-message {
-  background-color: #fff0f0;
-  color: #c62828;
-  padding: 10px 16px;
-  border-radius: 6px;
-  margin-bottom: 16px;
-  font-size: 14px;
-  border-left: 4px solid #e53935;
+/* --- Buttons & Actions --- */
+// The "Add Course" Button
+button[mat-raised-button].mat-primary, 
+.add-btn-cyber {
+  background-color: $cyber-green !important;
+  color: #000 !important; // Black text for contrast
+  border-radius: 4px !important;
+  font-weight: 800 !important;
+  text-transform: uppercase;
+  letter-spacing: 1px !important;
+  box-shadow: 0 0 15px rgba(0, 230, 118, 0.4) !important;
+
+  &:hover {
+    box-shadow: 0 0 25px rgba(0, 230, 118, 0.6) !important;
+    transform: translateY(-1px);
+  }
 }
 
-// Global loading wrapper
+// Icon Buttons (Edit/Delete)
+::ng-deep {
+  button[mat-icon-button].mat-primary mat-icon {
+    color: $cyber-green !important;
+    filter: drop-shadow(0 0 5px rgba(0, 230, 118, 0.3));
+  }
+
+  button[mat-icon-button].mat-warn mat-icon {
+    color: #ff5252 !important;
+    filter: drop-shadow(0 0 5px rgba(255, 82, 82, 0.3));
+  }
+}
+
+/* --- Form Fields (Search) --- */
+::ng-deep .mat-mdc-form-field {
+  .mdc-notched-outline__reveal,
+  .mdc-notched-outline__idle {
+    border-color: rgba(255, 255, 255, 0.2) !important;
+  }
+  
+  input {
+    color: white !important;
+  }
+
+  .mat-mdc-form-field-icon-prefix, 
+  .mat-mdc-form-field-icon-suffix {
+    color: $cyber-green !important;
+  }
+}
+
+/* --- Loading & Errors --- */
 .loading-wrapper {
   display: flex;
-  justify-content: center;
-  padding: 48px;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 60px;
+  color: $cyber-green;
+  font-family: monospace;
 }
 
-// Global full width
-.full-width {
-  width: 100%;
+::ng-deep .mat-mdc-progress-spinner circle {
+  stroke: $cyber-green !important;
 }
 
-// Global margin left
-.ml-8 {
-  margin-left: 8px;
-}
-
-// Status text
-.status-text {
+.error-message {
+  background-color: rgba(255, 82, 82, 0.1);
+  color: #ff5252;
+  padding: 12px 16px;
+  border-radius: 4px;
+  margin-bottom: 16px;
   font-size: 14px;
-  color: #888;
-  font-style: italic;
-}
-
-// Custom dialog panel
-.custom-dialog .mat-mdc-dialog-surface {
-  border-radius: 12px !important;
-  padding: 0 !important;
-  overflow: hidden !important;
-}
-
-// Add button style
-button[mat-raised-button][color="primary"] {
-  background-color: #1a3a5c !important;
-  color: white !important;
-  border-radius: 6px !important;
-  font-weight: 500 !important;
-  letter-spacing: 0.3px !important;
-}
-
-// Icon buttons
-button[mat-icon-button][color="primary"] mat-icon {
-  color: #1a3a5c !important;
-}
-
-button[mat-icon-button][color="warn"] mat-icon {
-  color: #e53935 !important;
-}
-
-// Content wrapper
-.content-wrapper {
-  background: white;
-  border-radius: 12px;
-  padding: 24px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
-  border: 1px solid rgba(26, 58, 92, 0.08);
+  border: 1px solid #ff5252;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }

@@ -1,50 +1,137 @@
 <div class="login-wrapper">
-  <mat-card class="login-card">
 
-    <div class="login-header">
-      <div class="school-logo">
-        <mat-icon>school</mat-icon>
+  <!-- Animated background particles -->
+  <div class="bg-grid"></div>
+  <div class="corner-decoration top-left"></div>
+  <div class="corner-decoration top-right"></div>
+  <div class="corner-decoration bottom-left"></div>
+  <div class="corner-decoration bottom-right"></div>
+
+  <div class="split-container">
+
+    <!-- ── LEFT SIDE ── -->
+    <div class="info-side">
+      <div class="top-bar">
+        <div class="system-id">SYS://REGISTRAR_MODULE_v2.0</div>
+        <div class="status-badge">
+          <span class="pulse-dot"></span>
+          SYSTEM ONLINE
+        </div>
       </div>
-      <h1>Registrar Portal</h1>
-      <p>SCHOOL MANAGEMENT SYSTEM</p>
+
+      <div class="info-content">
+        <div class="title-block">
+          <div class="title-label">// PLATFORM</div>
+          <h2>Registrar<br><span class="green-text">Management</span><br>System</h2>
+          <div class="title-underline"></div>
+        </div>
+
+        <p class="description">
+          Core administrative hub for authorized registrars. Manage student records,
+          curriculum structures, and enrollment protocols with real-time data synchronization.
+        </p>
+
+        <ul class="feature-list">
+          <li>
+            <div class="feature-icon"><mat-icon>verified_user</mat-icon></div>
+            <div class="feature-text">
+              <span class="feature-title">Encrypted Data Access</span>
+              <span class="feature-sub">AES-256 end-to-end encryption</span>
+            </div>
+          </li>
+          <li>
+            <div class="feature-icon"><mat-icon>analytics</mat-icon></div>
+            <div class="feature-text">
+              <span class="feature-title">Real-time Tracking</span>
+              <span class="feature-sub">Live enrollment synchronization</span>
+            </div>
+          </li>
+          <li>
+            <div class="feature-icon"><mat-icon>history</mat-icon></div>
+            <div class="feature-text">
+              <span class="feature-title">Audit Logs Active</span>
+              <span class="feature-sub">Full activity trail maintained</span>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <div class="info-footer">
+        <div class="footer-divider"></div>
+        <div class="footer-row">
+          <span class="footer-copy">© 2026 Global School Systems</span>
+          <span class="footer-tag">SECURE TERMINAL</span>
+        </div>
+      </div>
     </div>
 
-    <mat-card-content>
-      @if (errorMessage) {
-        <div class="error-message">
-          <mat-icon style="font-size:18px;width:18px;height:18px;">error</mat-icon>
-          {{ errorMessage }}
+    <!-- ── RIGHT SIDE ── -->
+    <div class="form-side">
+      <div class="form-inner">
+
+        <div class="login-header">
+          <div class="logo-wrap">
+            <div class="logo-hex">
+              <mat-icon>school</mat-icon>
+            </div>
+            <div class="logo-rings">
+              <div class="ring ring-1"></div>
+              <div class="ring ring-2"></div>
+            </div>
+          </div>
+          <div class="header-text">
+            <h1>Authorized Access</h1>
+            <p class="header-sub">// PLEASE IDENTIFY YOURSELF</p>
+          </div>
         </div>
-      }
 
-      <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Email Address</mat-label>
-        <input matInput type="email" [(ngModel)]="email" placeholder="admin@school.edu" />
-        <mat-icon matSuffix>email</mat-icon>
-      </mat-form-field>
+        <div class="form-fields">
+          <div class="field-group">
+            <div class="field-label">IDENTITY TAG</div>
+            <mat-form-field appearance="fill" class="cyber-field full-width">
+              <input matInput type="email" [(ngModel)]="email" name="email" placeholder="user@domain.com" />
+              <mat-icon matSuffix>vpn_key</mat-icon>
+            </mat-form-field>
+          </div>
 
-      <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Password</mat-label>
-        <input matInput [type]="hidePassword ? 'password' : 'text'" [(ngModel)]="password" />
-        <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword">
-          <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
-        </button>
-      </mat-form-field>
-    </mat-card-content>
+          <div class="field-group">
+            <div class="field-label">ACCESS CODE</div>
+            <mat-form-field appearance="fill" class="cyber-field full-width">
+              <input matInput [type]="hidePassword ? 'password' : 'text'"
+                     [(ngModel)]="password" name="password" placeholder="••••••••••••" />
+              <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword">
+                <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+              </button>
+            </mat-form-field>
+          </div>
+        </div>
 
-    <mat-card-actions>
-      <button mat-raised-button
-              class="sign-in-btn"
-              type="button"
-              [disabled]="loading"
-              (click)="login()">
-        @if (loading) {
-          <mat-spinner diameter="24" style="margin: 0 auto;"></mat-spinner>
-        } @else {
-          Sign In
+        @if (errorMessage) {
+          <div class="error-bar">
+            <mat-icon>error_outline</mat-icon>
+            <span>{{ errorMessage }}</span>
+          </div>
         }
-      </button>
-    </mat-card-actions>
 
-  </mat-card>
+        <button mat-flat-button class="cyber-button" (click)="login()" [disabled]="loading">
+          <div class="button-content-wrapper">
+            @if (loading) {
+              <mat-spinner diameter="20" class="white-spinner"></mat-spinner>
+              <span class="loading-text">ESTABLISHING CONNECTION...</span>
+            } @else {
+              <span class="btn-text">INITIALIZE ACCESS</span>
+              <mat-icon class="btn-icon">arrow_forward</mat-icon>
+            }
+          </div>
+        </button>
+
+        <div class="security-seal">
+          <mat-icon>lock</mat-icon>
+          <span>End-to-End Encryption Active</span>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
 </div>

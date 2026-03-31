@@ -1,44 +1,48 @@
-<mat-sidenav-container style="height: 100vh;">
-
-  <mat-sidenav mode="side" opened style="width: 250px;">
-
+<mat-sidenav-container class="cyber-layout-container">
+  <mat-sidenav mode="side" opened class="cyber-sidenav">
     <div class="school-brand">
       <div class="brand-logo">
         <mat-icon>school</mat-icon>
       </div>
-      <h3>SMS Registrar</h3>
-      <p>School Management System</p>
+      <div class="brand-text">
+        <h3>SMS Registrar</h3>
+        <p>SYSTEM STATUS: OPERATIONAL</p>
+      </div>
     </div>
 
-    <mat-nav-list>
+    <mat-nav-list class="cyber-nav-list">
       @for (item of navItems; track item.route) {
         <a mat-list-item
            [routerLink]="item.route"
-           routerLinkActive="active-link">
+           routerLinkActive="active-link"
+           class="nav-item">
           <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
           <span matListItemTitle>{{ item.label }}</span>
         </a>
       }
     </mat-nav-list>
-
   </mat-sidenav>
 
-  <mat-sidenav-content>
-    <mat-toolbar style="background: #0d2137; color: white; box-shadow: 0 2px 8px rgba(0,0,0,0.3);">
-      <span style="font-weight: 700; font-size: 18px; letter-spacing: 0.5px;">Registrar Dashboard</span>
-      <span class="toolbar-spacer"></span>
-      <div class="user-info">
-        <mat-icon>account_circle</mat-icon>
-        <span>Admin</span>
+  <mat-sidenav-content class="cyber-content">
+    <mat-toolbar class="cyber-toolbar">
+      <div class="toolbar-title">
+        <span class="glitch-text">REGISTRAR DASHBOARD</span>
       </div>
-      <button mat-icon-button (click)="logout()" title="Logout" style="color: white;">
-        <mat-icon>logout</mat-icon>
+      
+      <span class="toolbar-spacer"></span>
+      
+      <div class="user-info-badge">
+        <mat-icon>admin_panel_settings</mat-icon>
+        <span>AUTH_LEVEL: ADMIN</span>
+      </div>
+
+      <button mat-icon-button (click)="logout()" title="Terminate Session" class="logout-btn">
+        <mat-icon>power_settings_new</mat-icon>
       </button>
     </mat-toolbar>
 
-    <div style="padding: 24px;">
+    <div class="router-container">
       <router-outlet />
     </div>
   </mat-sidenav-content>
-
 </mat-sidenav-container>

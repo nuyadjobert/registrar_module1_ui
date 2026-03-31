@@ -1,93 +1,143 @@
-.active-link {
-  background-color: rgba(255, 255, 255, 0.2) !important;
-  border-left: 4px solid white !important;
-  font-weight: 600 !important;
+// Color Variables
+$cyber-green: #00E676;
+$bg-black: #080808;
+$panel-dark: #121212;
+$border-glow: rgba(0, 230, 118, 0.2);
+
+.cyber-layout-container {
+  height: 100vh;
+  background-color: $bg-black;
 }
 
-mat-sidenav {
-  background: linear-gradient(180deg, #0d2137 0%, #1a3a5c 100%) !important;
+/* --- SIDENAV STYLING --- */
+.cyber-sidenav {
+  width: 260px;
+  background: $bg-black !important;
+  border-right: 1px solid $border-glow !important;
 
   .school-brand {
-    padding: 24px 16px 16px;
-    border-bottom: 1px solid rgba(255,255,255,0.1);
-    margin-bottom: 8px;
+    padding: 32px 20px;
+    background: darken($panel-dark, 2%);
+    border-bottom: 1px solid $border-glow;
+    display: flex;
+    align-items: center;
+    gap: 12px;
 
     .brand-logo {
-      width: 52px;
-      height: 52px;
-      background: rgba(255,255,255,0.15);
-      border-radius: 50%;
+      width: 45px;
+      height: 45px;
+      background: rgba(0, 230, 118, 0.1);
+      border: 1px solid $cyber-green;
+      border-radius: 4px;
       display: flex;
       align-items: center;
       justify-content: center;
-      margin-bottom: 10px;
+      box-shadow: 0 0 10px rgba(0, 230, 118, 0.2);
 
       mat-icon {
-        color: white;
-        font-size: 28px !important;
-        width: 28px !important;
-        height: 28px !important;
+        color: $cyber-green;
+        filter: drop-shadow(0 0 2px $cyber-green);
       }
     }
 
     h3 {
       color: white;
-      font-size: 16px;
-      font-weight: 700;
+      font-size: 15px;
+      font-weight: 800;
       margin: 0;
-      letter-spacing: 0.5px;
+      letter-spacing: 1px;
     }
 
     p {
-      color: rgba(255,255,255,0.6);
-      font-size: 11px;
-      margin: 3px 0 0;
-      letter-spacing: 0.3px;
+      color: $cyber-green;
+      font-size: 9px;
+      font-family: 'Roboto Mono', monospace;
+      margin: 2px 0 0;
+      opacity: 0.8;
     }
   }
 
-  mat-nav-list {
-    padding: 0 10px;
+  /* Navigation Links */
+  .cyber-nav-list {
+    padding: 15px 12px;
 
-    a {
-      color: rgba(255,255,255,0.8) !important;
-      border-radius: 8px !important;
-      margin-bottom: 4px !important;
-      font-size: 14px !important;
-      font-weight: 500 !important;
-
-      &:hover {
-        background-color: rgba(255,255,255,0.1) !important;
-        color: white !important;
-      }
+    .nav-item {
+      color: rgba(255, 255, 255, 0.6) !important;
+      border-radius: 4px !important;
+      margin-bottom: 6px !important;
+      transition: all 0.3s ease;
 
       mat-icon {
-        color: rgba(255,255,255,0.8) !important;
+        color: rgba(255, 255, 255, 0.4);
+      }
+
+      &:hover {
+        background: rgba(0, 230, 118, 0.05) !important;
+        color: white !important;
+        mat-icon { color: $cyber-green; }
+      }
+    }
+
+    .active-link {
+      background: rgba(0, 230, 118, 0.1) !important;
+      color: $cyber-green !important;
+      border-left: 3px solid $cyber-green !important;
+      font-weight: 700 !important;
+
+      mat-icon {
+        color: $cyber-green !important;
+        filter: drop-shadow(0 0 5px $cyber-green);
       }
     }
   }
 }
 
-.toolbar-spacer {
-  flex: 1;
-}
-
-.user-info {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 14px;
-  font-weight: 500;
+/* --- TOOLBAR & CONTENT STYLING --- */
+.cyber-toolbar {
+  background: $panel-dark !important;
   color: white !important;
-  margin-right: 8px;
-  background: rgba(255,255,255,0.15);
-  padding: 6px 12px;
-  border-radius: 20px;
+  border-bottom: 1px solid $border-glow;
+  height: 64px;
 
-  mat-icon {
-    color: white !important;
-    font-size: 20px !important;
-    width: 20px !important;
-    height: 20px !important;
+  .toolbar-title {
+    font-family: 'Roboto Mono', monospace;
+    font-weight: 700;
+    letter-spacing: 2px;
+    font-size: 16px;
+    color: white;
+  }
+
+  .user-info-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 6px 14px;
+    border-radius: 4px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    font-size: 11px;
+    font-family: 'Roboto Mono', monospace;
+    margin-right: 15px;
+
+    mat-icon {
+      color: $cyber-green;
+      font-size: 18px; width: 18px; height: 18px;
+    }
+  }
+
+  .logout-btn {
+    color: #ff5252 !important;
+    &:hover { background: rgba(255, 82, 82, 0.1); }
   }
 }
+
+.cyber-content {
+  background-color: $bg-black !important;
+}
+
+.router-container {
+  padding: 24px;
+  background: transparent;
+}
+
+.toolbar-spacer { flex: 1; }
