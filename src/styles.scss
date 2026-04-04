@@ -1,186 +1,495 @@
 @use '@angular/material' as mat;
-@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
 
-// Theme Color Variables
-$cyber-green: #00E676;
-$bg-dark: #080808;
-$panel-dark: #121212;
-$panel-light: #1a1a1a;
-$text-dim: rgba(255, 255, 255, 0.7);
-
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+// ─── Design Tokens ───────────────────────────────────────────────────────────
+:root {
+  --bg-deep:           #020203;
+  --bg-base:           #050506;
+  --bg-elevated:       #0a0a0c;
+  --surface:           rgba(255,255,255,0.05);
+  --surface-hover:     rgba(255,255,255,0.08);
+  --foreground:        #EDEDEF;
+  --foreground-muted:  #8A8F98;
+  --foreground-subtle: rgba(255,255,255,0.40);
+  --accent:            #5E6AD2;
+  --accent-bright:     #6872D9;
+  --accent-glow:       rgba(94,106,210,0.30);
+  --accent-glow-soft:  rgba(94,106,210,0.12);
+  --border:            rgba(255,255,255,0.06);
+  --border-hover:      rgba(255,255,255,0.10);
+  --border-accent:     rgba(94,106,210,0.30);
+  --danger:            rgba(239,68,68,1);
+  --danger-glow:       rgba(239,68,68,0.20);
+  --success:           rgba(52,211,153,1);
+  --warning:           rgba(251,191,36,1);
+  --radius-sm:         6px;
+  --radius-md:         10px;
+  --radius-lg:         16px;
+  --radius-xl:         20px;
+  --font-sans:         'Inter', system-ui, sans-serif;
+  --font-mono:         'JetBrains Mono', monospace;
 }
+
+// ─── Reset ────────────────────────────────────────────────────────────────────
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 html, body {
   height: 100%;
-  // Use Roboto Mono for that technical/terminal feel
-  font-family: 'Roboto Mono', 'Segoe UI', monospace;
-  background-color: $bg-dark;
-  color: white;
+  font-family: var(--font-sans);
+  background-color: var(--bg-base);
+  color: var(--foreground);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* --- Content Wrapper (The Main Card) --- */
+// ─── Scrollbar ────────────────────────────────────────────────────────────────
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--bg-deep); }
+::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.08);
+  border-radius: 99px;
+  &:hover { background: rgba(255,255,255,0.14); }
+}
+
+// ─── Content Wrapper ─────────────────────────────────────────────────────────
 .content-wrapper {
-  background: $panel-dark !important;
-  border-radius: 8px;
-  padding: 24px;
-  box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
-  border: 1px solid rgba(0, 230, 118, 0.15);
+  background: linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.02) 100%) !important;
+  border-radius: var(--radius-lg);
+  padding: 28px;
+  border: 1px solid var(--border);
   position: relative;
   overflow: hidden;
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.04),
+    0 4px 32px rgba(0,0,0,0.4),
+    0 0 80px rgba(0,0,0,0.2);
 
-  // Subtle grid background effect
   &::before {
     content: '';
-    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-    background-image: linear-gradient(rgba(0, 230, 118, 0.03) 1px, transparent 1px),
-                      linear-gradient(90deg, rgba(0, 230, 118, 0.03) 1px, transparent 1px);
-    background-size: 30px 30px;
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
+    background-size: 64px 64px;
     pointer-events: none;
+    z-index: 0;
   }
+
+  > * { position: relative; z-index: 1; }
 }
 
-/* --- Global Table Styles --- */
-::ng-deep {
-  .mat-mdc-table {
-    background: transparent !important;
-    border-radius: 4px !important;
-    overflow: hidden;
-  }
-
-  .mat-mdc-header-row {
-    background-color: $panel-light !important;
-  }
-
-  .mat-mdc-header-cell {
-    color: $cyber-green !important;
-    font-weight: 700 !important;
-    text-transform: uppercase;
-    font-size: 12px !important;
-    letter-spacing: 1.5px;
-    border-bottom: 2px solid rgba(0, 230, 118, 0.2) !important;
-  }
-
-  .mat-mdc-row {
-    background-color: transparent !important;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
-    transition: all 0.2s ease;
-
-    &:hover {
-      background-color: rgba(0, 230, 118, 0.05) !important;
-    }
-  }
-
-  .mat-mdc-cell {
-    color: $text-dim !important;
-    font-size: 14px !important;
-    padding: 16px !important;
-  }
-
-  // Highlight the Course Code specifically
-  .mat-column-course_code {
-    color: white !important;
-    font-weight: 700;
-  }
-}
-
-/* --- Page Header --- */
+// ─── Page Header ─────────────────────────────────────────────────────────────
 .page-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 25px;
-  padding-bottom: 15px;
-  border-bottom: 1px solid rgba(0, 230, 118, 0.3);
+  margin-bottom: 28px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border);
 
   h2 {
-    margin: 0;
-    font-size: 24px;
-    font-weight: 700;
-    color: white;
-    letter-spacing: 1px;
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--foreground);
+    letter-spacing: -0.02em;
+
     &::before {
-      content: '> ';
-      color: $cyber-green;
+      content: '';
+      display: inline-block;
+      width: 8px; height: 8px;
+      background: var(--accent);
+      border-radius: 50%;
+      margin-right: 10px;
+      box-shadow: 0 0 8px var(--accent-glow);
+      vertical-align: middle;
     }
   }
 }
 
-/* --- Buttons & Actions --- */
-// The "Add Course" Button
-button[mat-raised-button].mat-primary, 
-.add-btn-cyber {
-  background-color: $cyber-green !important;
-  color: #000 !important; // Black text for contrast
-  border-radius: 4px !important;
-  font-weight: 800 !important;
-  text-transform: uppercase;
-  letter-spacing: 1px !important;
-  box-shadow: 0 0 15px rgba(0, 230, 118, 0.4) !important;
+// ─── Material Table Overrides ─────────────────────────────────────────────────
+::ng-deep {
+  .mat-mdc-table {
+    background: transparent !important;
+    border-collapse: separate !important;
+    border-spacing: 0 !important;
+  }
+
+  .mat-mdc-header-row {
+    background: rgba(255,255,255,0.03) !important;
+    border-bottom: 1px solid var(--border) !important;
+  }
+
+  .mat-mdc-header-cell {
+    color: var(--foreground-muted) !important;
+    font-family: var(--font-mono) !important;
+    font-size: 10px !important;
+    font-weight: 500 !important;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    border-bottom: none !important;
+    padding: 14px 16px !important;
+  }
+
+  .mat-mdc-row {
+    background: transparent !important;
+    border-bottom: 1px solid var(--border) !important;
+    transition: background 0.15s ease, box-shadow 0.15s ease;
+    cursor: pointer;
+
+    &:hover {
+      background: var(--surface-hover) !important;
+      box-shadow: inset 3px 0 0 var(--accent) !important;
+    }
+
+    &:last-child { border-bottom: none !important; }
+  }
+
+  .mat-mdc-cell {
+    color: var(--foreground-muted) !important;
+    font-size: 13px !important;
+    padding: 16px !important;
+    border-bottom: none !important;
+    font-family: var(--font-sans) !important;
+  }
+
+  // Primary column always bright
+  .mat-column-course_code,
+  .mat-column-subject_code,
+  .mat-column-section_name,
+  .mat-column-name,
+  .mat-column-student_number {
+    color: var(--foreground) !important;
+    font-weight: 500 !important;
+    font-family: var(--font-mono) !important;
+    font-size: 12px !important;
+  }
+}
+
+// ─── Status Badges ────────────────────────────────────────────────────────────
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px;
+  border-radius: 99px;
+  font-size: 11px;
+  font-weight: 500;
+  font-family: var(--font-mono);
+  letter-spacing: 0.04em;
+
+  &::before {
+    content: '';
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: currentColor;
+    flex-shrink: 0;
+  }
+
+  &.active, &.approved, &.open {
+    color: var(--success);
+    background: rgba(52,211,153,0.10);
+    border: 1px solid rgba(52,211,153,0.20);
+  }
+
+  &.inactive, &.rejected, &.closed {
+    color: var(--danger);
+    background: var(--danger-glow);
+    border: 1px solid rgba(239,68,68,0.20);
+  }
+
+  &.pending, &.unpaid {
+    color: var(--warning);
+    background: rgba(251,191,36,0.10);
+    border: 1px solid rgba(251,191,36,0.20);
+  }
+
+  &.major, &.paid, &.released {
+    color: var(--accent-bright);
+    background: var(--accent-glow-soft);
+    border: 1px solid var(--border-accent);
+  }
+}
+
+// ─── Buttons ──────────────────────────────────────────────────────────────────
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 18px;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-md);
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow:
+    0 0 0 1px rgba(94,106,210,0.5),
+    0 4px 12px rgba(94,106,210,0.25),
+    inset 0 1px 0 rgba(255,255,255,0.15);
 
   &:hover {
-    box-shadow: 0 0 25px rgba(0, 230, 118, 0.6) !important;
-    transform: translateY(-1px);
+    background: var(--accent-bright);
+    transform: translateY(-2px);
+    box-shadow:
+      0 0 0 1px rgba(94,106,210,0.6),
+      0 8px 24px rgba(94,106,210,0.35),
+      inset 0 1px 0 rgba(255,255,255,0.2);
   }
+
+  &:active { transform: scale(0.98); }
 }
 
-// Icon Buttons (Edit/Delete)
 ::ng-deep {
-  button[mat-icon-button].mat-primary mat-icon {
-    color: $cyber-green !important;
-    filter: drop-shadow(0 0 5px rgba(0, 230, 118, 0.3));
+  button[mat-raised-button].mat-primary,
+  .add-btn-cyber {
+    background: var(--accent) !important;
+    color: #fff !important;
+    border-radius: var(--radius-md) !important;
+    font-family: var(--font-sans) !important;
+    font-size: 13px !important;
+    font-weight: 500 !important;
+    letter-spacing: 0.01em !important;
+    text-transform: none !important;
+    box-shadow:
+      0 0 0 1px rgba(94,106,210,0.5),
+      0 4px 12px rgba(94,106,210,0.25),
+      inset 0 1px 0 rgba(255,255,255,0.12) !important;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+
+    &:hover {
+      background: var(--accent-bright) !important;
+      transform: translateY(-2px) !important;
+      box-shadow:
+        0 0 0 1px rgba(94,106,210,0.7),
+        0 8px 24px rgba(94,106,210,0.35),
+        inset 0 1px 0 rgba(255,255,255,0.15) !important;
+    }
   }
 
-  button[mat-icon-button].mat-warn mat-icon {
-    color: #ff5252 !important;
-    filter: drop-shadow(0 0 5px rgba(255, 82, 82, 0.3));
+  button[mat-icon-button] {
+    border-radius: var(--radius-md) !important;
+    transition: all 0.2s ease !important;
+
+    &.mat-primary mat-icon {
+      color: var(--accent) !important;
+    }
+
+    &.mat-warn mat-icon {
+      color: var(--danger) !important;
+    }
+
+    &:hover {
+      background: var(--surface-hover) !important;
+    }
   }
 }
 
-/* --- Form Fields (Search) --- */
+// ─── Form Fields ──────────────────────────────────────────────────────────────
 ::ng-deep .mat-mdc-form-field {
-  .mdc-notched-outline__reveal,
-  .mdc-notched-outline__idle {
-    border-color: rgba(255, 255, 255, 0.2) !important;
-  }
-  
-  input {
-    color: white !important;
+  .mdc-notched-outline__leading,
+  .mdc-notched-outline__notch,
+  .mdc-notched-outline__trailing {
+    border-color: var(--border-hover) !important;
   }
 
-  .mat-mdc-form-field-icon-prefix, 
+  &.mat-focused {
+    .mdc-notched-outline__leading,
+    .mdc-notched-outline__notch,
+    .mdc-notched-outline__trailing {
+      border-color: var(--accent) !important;
+      box-shadow: 0 0 0 3px var(--accent-glow-soft);
+    }
+  }
+
+  input, textarea {
+    color: var(--foreground) !important;
+    font-family: var(--font-sans) !important;
+    caret-color: var(--accent) !important;
+  }
+
+  .mat-mdc-form-field-icon-prefix,
   .mat-mdc-form-field-icon-suffix {
-    color: $cyber-green !important;
+    color: var(--foreground-muted) !important;
+  }
+
+  .mdc-floating-label {
+    color: var(--foreground-subtle) !important;
+  }
+
+  .mat-mdc-select-value-text {
+    color: var(--foreground) !important;
   }
 }
 
-/* --- Loading & Errors --- */
+// ─── Dialogs / Modals ─────────────────────────────────────────────────────────
+::ng-deep .mat-mdc-dialog-container {
+  .mdc-dialog__surface {
+    background: linear-gradient(135deg, #0e0e12 0%, #0a0a0d 100%) !important;
+    border: 1px solid var(--border-hover) !important;
+    border-radius: var(--radius-xl) !important;
+    box-shadow:
+      0 0 0 1px rgba(255,255,255,0.06),
+      0 24px 80px rgba(0,0,0,0.6),
+      0 0 120px rgba(94,106,210,0.08) !important;
+  }
+
+  .mat-mdc-dialog-title {
+    color: var(--foreground) !important;
+    font-family: var(--font-sans) !important;
+    font-weight: 600 !important;
+    font-size: 17px !important;
+    letter-spacing: -0.01em !important;
+    padding: 24px 24px 0 !important;
+  }
+
+  .mat-mdc-dialog-content {
+    color: var(--foreground-muted) !important;
+    font-family: var(--font-sans) !important;
+    padding: 16px 24px !important;
+  }
+
+  .mat-mdc-dialog-actions {
+    padding: 16px 24px 24px !important;
+    gap: 10px;
+    border-top: 1px solid var(--border) !important;
+    margin-top: 8px;
+  }
+}
+
+// ─── Snackbar ─────────────────────────────────────────────────────────────────
+::ng-deep .mat-mdc-snack-bar-container {
+  .mdc-snackbar__surface {
+    background: #16161a !important;
+    border: 1px solid var(--border-hover) !important;
+    border-radius: var(--radius-md) !important;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.5) !important;
+  }
+
+  .mat-mdc-snack-bar-label {
+    color: var(--foreground) !important;
+    font-family: var(--font-sans) !important;
+    font-size: 13px !important;
+  }
+}
+
+// ─── Select Panel ─────────────────────────────────────────────────────────────
+::ng-deep .mat-mdc-select-panel {
+  background: #0e0e12 !important;
+  border: 1px solid var(--border-hover) !important;
+  border-radius: var(--radius-md) !important;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5) !important;
+
+  .mat-mdc-option {
+    color: var(--foreground-muted) !important;
+    font-family: var(--font-sans) !important;
+    font-size: 13px !important;
+
+    &:hover, &.mat-mdc-option-active {
+      background: var(--surface-hover) !important;
+      color: var(--foreground) !important;
+    }
+
+    &.mdc-list-item--selected {
+      color: var(--accent) !important;
+      background: var(--accent-glow-soft) !important;
+    }
+  }
+}
+
+// ─── Progress Spinner ─────────────────────────────────────────────────────────
+::ng-deep .mat-mdc-progress-spinner circle {
+  stroke: var(--accent) !important;
+}
+
+// ─── Loading & Error ──────────────────────────────────────────────────────────
 .loading-wrapper {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10px;
-  padding: 60px;
-  color: $cyber-green;
-  font-family: monospace;
-}
-
-::ng-deep .mat-mdc-progress-spinner circle {
-  stroke: $cyber-green !important;
+  gap: 14px;
+  padding: 80px;
+  color: var(--foreground-muted);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.08em;
 }
 
 .error-message {
-  background-color: rgba(255, 82, 82, 0.1);
-  color: #ff5252;
+  background: var(--danger-glow);
+  color: var(--danger);
   padding: 12px 16px;
-  border-radius: 4px;
+  border-radius: var(--radius-md);
   margin-bottom: 16px;
-  font-size: 14px;
-  border: 1px solid #ff5252;
+  font-size: 13px;
+  border: 1px solid rgba(239,68,68,0.25);
   display: flex;
   align-items: center;
   gap: 10px;
+  font-family: var(--font-sans);
+}
+
+// ─── Keyframe Animations ──────────────────────────────────────────────────────
+@keyframes float-slow {
+  0%, 100% { transform: translateY(0px) rotate(0deg) scale(1); }
+  33%       { transform: translateY(-18px) rotate(0.8deg) scale(1.01); }
+  66%       { transform: translateY(-8px) rotate(-0.5deg) scale(0.99); }
+}
+
+@keyframes float-medium {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50%       { transform: translateY(-24px) rotate(1.2deg); }
+}
+
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.08; }
+  50%       { opacity: 0.18; }
+}
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+// ─── Utility Classes ──────────────────────────────────────────────────────────
+.text-accent  { color: var(--accent); }
+.text-muted   { color: var(--foreground-muted); }
+.text-subtle  { color: var(--foreground-subtle); }
+.font-mono    { font-family: var(--font-mono); }
+.animate-fade-up { animation: fade-up 0.4s cubic-bezier(0.16, 1, 0.3, 1) both; }
+
+
+// ... your existing global styles ...
+
+// ── Dialog panel overrides ──
+.lnr-dialog-panel {
+  .mat-mdc-dialog-container {
+    padding: 0 !important;
+    background: transparent !important;
+    border-radius: 12px !important;
+    overflow: hidden;
+    box-shadow:
+      0 0 0 1px rgba(255, 255, 255, 0.04),
+      0 24px 64px rgba(0, 0, 0, 0.65),
+      0 8px 24px rgba(0, 0, 0, 0.4) !important;
+  }
+
+  .mdc-dialog__surface {
+    background: transparent !important;
+    border-radius: 12px !important;
+    overflow: hidden;
+    box-shadow: none !important;
+  }
+}
+
+.lnr-dialog-backdrop {
+  background: rgba(0, 0, 0, 0.72) !important;
+  backdrop-filter: blur(3px);
 }

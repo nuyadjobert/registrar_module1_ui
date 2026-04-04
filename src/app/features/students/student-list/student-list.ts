@@ -4,7 +4,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { StudentService } from '../../../core/services/student';
-
+ 
 @Component({
   selector: 'app-student-list',
   standalone: true,
@@ -22,40 +22,30 @@ export class StudentList implements OnInit {
   students: any[] = [];
   loading = false;
   errorMessage = '';
-
+ 
   constructor(private studentService: StudentService) {}
-
-  async ngOnInit() {
-    await this.loadStudents();
-  }
-
+ 
+  async ngOnInit() { await this.loadStudents(); }
+ 
   async loadStudents() {
-    this.loading = true;
-    this.errorMessage = '';
-    try {
-      this.students = await this.studentService.getAll();
-    } catch (error: any) {
-      this.errorMessage = 'Failed to load students. Please try again.';
-    } finally {
-      this.loading = false;
-    }
+    this.loading = true; this.errorMessage = '';
+    try { this.students = await this.studentService.getAll(); }
+    catch (e: any) { this.errorMessage = 'Failed to load students. Please try again.'; }
+    finally { this.loading = false; }
   }
-
+ 
   async viewCOR(id: number) {
     try {
       const data = await this.studentService.getCOR(id);
       alert(JSON.stringify(data, null, 2));
-    } catch (error) {
-      this.errorMessage = 'Failed to get COR.';
-    }
+    } catch { this.errorMessage = 'Failed to get COR.'; }
   }
-
+ 
   async viewTranscript(id: number) {
     try {
       const data = await this.studentService.getTranscript(id);
       alert(JSON.stringify(data, null, 2));
-    } catch (error) {
-      this.errorMessage = 'Failed to get transcript.';
-    }
+    } catch { this.errorMessage = 'Failed to get transcript.'; }
   }
 }
+ 

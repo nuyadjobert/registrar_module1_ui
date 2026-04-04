@@ -1,48 +1,87 @@
-<mat-sidenav-container class="cyber-layout-container">
-  <mat-sidenav mode="side" opened class="cyber-sidenav">
-    <div class="school-brand">
-      <div class="brand-logo">
+<!-- Ambient background blobs -->
+<div class="ambient-layer" aria-hidden="true">
+  <div class="blob blob-primary"></div>
+  <div class="blob blob-secondary"></div>
+  <div class="blob blob-tertiary"></div>
+  <div class="blob blob-bottom"></div>
+  <div class="grid-overlay"></div>
+</div>
+
+<mat-sidenav-container class="shell-container">
+
+  <!-- ── Sidenav ─────────────────────────────────────────────────────────── -->
+  <mat-sidenav mode="side" opened class="shell-sidenav">
+
+    <!-- Brand -->
+    <div class="brand">
+      <div class="brand-icon">
         <mat-icon>school</mat-icon>
       </div>
       <div class="brand-text">
-        <h3>SMS Registrar</h3>
-        <p>SYSTEM STATUS: OPERATIONAL</p>
+        <span class="brand-name">SMS Registrar</span>
+        <span class="brand-status">
+          <span class="status-dot"></span>
+          OPERATIONAL
+        </span>
       </div>
     </div>
 
-    <mat-nav-list class="cyber-nav-list">
+    <!-- Nav section label -->
+    <div class="nav-section-label">NAVIGATION</div>
+
+    <!-- Nav items -->
+    <mat-nav-list class="shell-nav">
       @for (item of navItems; track item.route) {
         <a mat-list-item
            [routerLink]="item.route"
-           routerLinkActive="active-link"
+           routerLinkActive="nav-active"
            class="nav-item">
           <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
           <span matListItemTitle>{{ item.label }}</span>
+          <mat-icon class="nav-arrow" matListItemMeta>chevron_right</mat-icon>
         </a>
       }
     </mat-nav-list>
+
+    <!-- Sidenav footer -->
+    <div class="sidenav-footer">
+      <div class="footer-divider"></div>
+      <div class="footer-info">
+        <span class="footer-label">Academic Year</span>
+        <span class="footer-value">2025 – 2026</span>
+      </div>
+    </div>
+
   </mat-sidenav>
 
-  <mat-sidenav-content class="cyber-content">
-    <mat-toolbar class="cyber-toolbar">
-      <div class="toolbar-title">
-        <span class="glitch-text">REGISTRAR DASHBOARD</span>
-      </div>
-      
-      <span class="toolbar-spacer"></span>
-      
-      <div class="user-info-badge">
-        <mat-icon>admin_panel_settings</mat-icon>
-        <span>AUTH_LEVEL: ADMIN</span>
+  <!-- ── Main Content ────────────────────────────────────────────────────── -->
+  <mat-sidenav-content class="shell-content">
+
+    <!-- Toolbar -->
+    <header class="shell-toolbar">
+      <div class="toolbar-left">
+        <h1 class="toolbar-title">
+          <span class="title-accent">REGISTRAR</span> DASHBOARD
+        </h1>
       </div>
 
-      <button mat-icon-button (click)="logout()" title="Terminate Session" class="logout-btn">
-        <mat-icon>power_settings_new</mat-icon>
-      </button>
-    </mat-toolbar>
+      <div class="toolbar-right">
+        <div class="auth-badge">
+          <mat-icon>shield</mat-icon>
+          <span>ADMIN</span>
+        </div>
 
-    <div class="router-container">
+        <button class="logout-btn" (click)="logout()" title="Sign out">
+          <mat-icon>power_settings_new</mat-icon>
+        </button>
+      </div>
+    </header>
+
+    <!-- Router -->
+    <main class="router-area">
       <router-outlet />
-    </div>
+    </main>
+
   </mat-sidenav-content>
+
 </mat-sidenav-container>

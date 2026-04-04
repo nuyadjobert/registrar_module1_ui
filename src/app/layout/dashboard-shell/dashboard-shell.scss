@@ -1,143 +1,426 @@
-// Color Variables
-$cyber-green: #00E676;
-$bg-black: #080808;
-$panel-dark: #121212;
-$border-glow: rgba(0, 230, 118, 0.2);
+// ─── Shell Layout ─────────────────────────────────────────────────────────────
 
-.cyber-layout-container {
-  height: 100vh;
-  background-color: $bg-black;
+// Ambient blob layer — sits behind everything
+.ambient-layer {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
 }
 
-/* --- SIDENAV STYLING --- */
-.cyber-sidenav {
-  width: 260px;
-  background: $bg-black !important;
-  border-right: 1px solid $border-glow !important;
+.blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(120px);
+  will-change: transform;
+}
 
-  .school-brand {
-    padding: 32px 20px;
-    background: darken($panel-dark, 2%);
-    border-bottom: 1px solid $border-glow;
+.blob-primary {
+  width: 900px;
+  height: 700px;
+  top: -200px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: radial-gradient(ellipse, rgba(94,106,210,0.22) 0%, transparent 70%);
+  animation: float-slow 10s ease-in-out infinite;
+}
+
+.blob-secondary {
+  width: 600px;
+  height: 500px;
+  top: 20%;
+  left: -150px;
+  background: radial-gradient(ellipse, rgba(99,88,210,0.14) 0%, transparent 70%);
+  animation: float-medium 13s ease-in-out infinite;
+  animation-delay: -3s;
+}
+
+.blob-tertiary {
+  width: 500px;
+  height: 400px;
+  top: 30%;
+  right: -100px;
+  background: radial-gradient(ellipse, rgba(72,100,210,0.10) 0%, transparent 70%);
+  animation: float-slow 9s ease-in-out infinite;
+  animation-delay: -6s;
+}
+
+.blob-bottom {
+  width: 700px;
+  height: 300px;
+  bottom: -100px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: radial-gradient(ellipse, rgba(94,106,210,0.08) 0%, transparent 70%);
+  animation: pulse-glow 6s ease-in-out infinite;
+}
+
+.grid-overlay {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.018) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.018) 1px, transparent 1px);
+  background-size: 64px 64px;
+}
+
+// ─── Mat Container ────────────────────────────────────────────────────────────
+.shell-container {
+  height: 100vh;
+  background: transparent !important;
+  position: relative;
+  z-index: 1;
+
+  // Override Material's internal background
+  ::ng-deep .mat-drawer-container {
+    background: transparent !important;
+  }
+}
+
+// ─── Sidenav ──────────────────────────────────────────────────────────────────
+.shell-sidenav {
+  width: 256px;
+  background: rgba(5,5,6,0.85) !important;
+  border-right: 1px solid rgba(255,255,255,0.06) !important;
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  display: flex;
+  flex-direction: column;
+
+  // Brand section
+  .brand {
     display: flex;
     align-items: center;
     gap: 12px;
+    padding: 24px 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    flex-shrink: 0;
+  }
 
-    .brand-logo {
-      width: 45px;
-      height: 45px;
-      background: rgba(0, 230, 118, 0.1);
-      border: 1px solid $cyber-green;
-      border-radius: 4px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 0 10px rgba(0, 230, 118, 0.2);
+  .brand-icon {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, rgba(94,106,210,0.2), rgba(94,106,210,0.05));
+    border: 1px solid rgba(94,106,210,0.3);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-shadow:
+      0 0 0 1px rgba(94,106,210,0.1),
+      0 0 20px rgba(94,106,210,0.12);
 
-      mat-icon {
-        color: $cyber-green;
-        filter: drop-shadow(0 0 2px $cyber-green);
-      }
-    }
-
-    h3 {
-      color: white;
-      font-size: 15px;
-      font-weight: 800;
-      margin: 0;
-      letter-spacing: 1px;
-    }
-
-    p {
-      color: $cyber-green;
-      font-size: 9px;
-      font-family: 'Roboto Mono', monospace;
-      margin: 2px 0 0;
-      opacity: 0.8;
+    mat-icon {
+      color: #7B8AE0;
+      font-size: 20px;
+      width: 20px; height: 20px;
     }
   }
 
-  /* Navigation Links */
-  .cyber-nav-list {
-    padding: 15px 12px;
+  .brand-name {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: #EDEDEF;
+    letter-spacing: -0.01em;
+    line-height: 1.2;
+  }
+
+  .brand-status {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 9px;
+    font-family: 'JetBrains Mono', monospace;
+    color: rgba(52,211,153,0.8);
+    letter-spacing: 0.1em;
+    margin-top: 3px;
+  }
+
+  .status-dot {
+    width: 5px; height: 5px;
+    background: rgba(52,211,153,1);
+    border-radius: 50%;
+    box-shadow: 0 0 6px rgba(52,211,153,0.6);
+    animation: pulse-glow 2.5s ease-in-out infinite;
+  }
+
+  // Nav label
+  .nav-section-label {
+    padding: 20px 20px 8px;
+    font-size: 9px;
+    font-family: 'JetBrains Mono', monospace;
+    color: rgba(255,255,255,0.25);
+    letter-spacing: 0.14em;
+    flex-shrink: 0;
+  }
+
+  // Nav list
+  .shell-nav {
+    padding: 4px 10px !important;
+    flex: 1;
+    overflow-y: auto;
 
     .nav-item {
-      color: rgba(255, 255, 255, 0.6) !important;
-      border-radius: 4px !important;
-      margin-bottom: 6px !important;
-      transition: all 0.3s ease;
+      color: rgba(255,255,255,0.45) !important;
+      border-radius: 8px !important;
+      margin-bottom: 2px !important;
+      height: 42px !important;
+      transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1) !important;
+      position: relative;
 
       mat-icon {
-        color: rgba(255, 255, 255, 0.4);
+        color: rgba(255,255,255,0.3) !important;
+        font-size: 18px !important;
+        width: 18px !important; height: 18px !important;
+        transition: color 0.18s ease !important;
+      }
+
+      .mat-mdc-list-item-title {
+        font-size: 13px !important;
+        font-weight: 400 !important;
+        letter-spacing: -0.005em !important;
+        color: inherit !important;
+      }
+
+      .nav-arrow {
+        color: transparent !important;
+        font-size: 16px !important;
+        width: 16px !important; height: 16px !important;
+        transition: all 0.18s ease !important;
+        opacity: 0;
       }
 
       &:hover {
-        background: rgba(0, 230, 118, 0.05) !important;
-        color: white !important;
-        mat-icon { color: $cyber-green; }
+        background: rgba(255,255,255,0.05) !important;
+        color: rgba(255,255,255,0.80) !important;
+
+        mat-icon:first-child { color: rgba(255,255,255,0.65) !important; }
+        .nav-arrow { color: rgba(255,255,255,0.25) !important; opacity: 1; }
       }
     }
 
-    .active-link {
-      background: rgba(0, 230, 118, 0.1) !important;
-      color: $cyber-green !important;
-      border-left: 3px solid $cyber-green !important;
-      font-weight: 700 !important;
+    .nav-active {
+      background: linear-gradient(
+        135deg,
+        rgba(94,106,210,0.18) 0%,
+        rgba(94,106,210,0.06) 100%
+      ) !important;
+      color: #EDEDEF !important;
+      border: 1px solid rgba(94,106,210,0.20) !important;
 
-      mat-icon {
-        color: $cyber-green !important;
-        filter: drop-shadow(0 0 5px $cyber-green);
+      &::before {
+        content: '';
+        position: absolute;
+        left: 0; top: 20%; bottom: 20%;
+        width: 2px;
+        background: #5E6AD2;
+        border-radius: 0 2px 2px 0;
+        box-shadow: 0 0 8px rgba(94,106,210,0.6);
+      }
+
+      mat-icon:first-child {
+        color: #7B8AE0 !important;
+        filter: drop-shadow(0 0 4px rgba(94,106,210,0.5));
+      }
+
+      .mat-mdc-list-item-title {
+        font-weight: 500 !important;
+        color: #EDEDEF !important;
+      }
+
+      .nav-arrow {
+        color: rgba(94,106,210,0.5) !important;
+        opacity: 1;
       }
     }
   }
-}
 
-/* --- TOOLBAR & CONTENT STYLING --- */
-.cyber-toolbar {
-  background: $panel-dark !important;
-  color: white !important;
-  border-bottom: 1px solid $border-glow;
-  height: 64px;
-
-  .toolbar-title {
-    font-family: 'Roboto Mono', monospace;
-    font-weight: 700;
-    letter-spacing: 2px;
-    font-size: 16px;
-    color: white;
+  // Footer
+  .sidenav-footer {
+    padding: 16px;
+    flex-shrink: 0;
   }
 
-  .user-info-badge {
+  .footer-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent);
+    margin-bottom: 14px;
+  }
+
+  .footer-info {
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    gap: 8px;
-    background: rgba(255, 255, 255, 0.05);
-    padding: 6px 14px;
-    border-radius: 4px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    font-size: 11px;
-    font-family: 'Roboto Mono', monospace;
-    margin-right: 15px;
-
-    mat-icon {
-      color: $cyber-green;
-      font-size: 18px; width: 18px; height: 18px;
-    }
+    padding: 0 4px;
   }
 
-  .logout-btn {
-    color: #ff5252 !important;
-    &:hover { background: rgba(255, 82, 82, 0.1); }
+  .footer-label {
+    font-size: 10px;
+    font-family: 'JetBrains Mono', monospace;
+    color: rgba(255,255,255,0.2);
+    letter-spacing: 0.06em;
+  }
+
+  .footer-value {
+    font-size: 10px;
+    font-family: 'JetBrains Mono', monospace;
+    color: rgba(94,106,210,0.7);
+    letter-spacing: 0.04em;
   }
 }
 
-.cyber-content {
-  background-color: $bg-black !important;
+// ─── Content Area ─────────────────────────────────────────────────────────────
+.shell-content {
+  background: transparent !important;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
 }
 
-.router-container {
-  padding: 24px;
+// ─── Toolbar ──────────────────────────────────────────────────────────────────
+.shell-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 28px;
+  height: 60px;
+  background: rgba(5,5,6,0.70);
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  flex-shrink: 0;
+  position: relative;
+  z-index: 10;
+
+  // Subtle gradient line at bottom
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -1px; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(94,106,210,0.2), transparent);
+  }
+}
+
+.toolbar-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.toolbar-title {
+  font-size: 13px;
+  font-weight: 600;
+  font-family: 'JetBrains Mono', monospace;
+  color: rgba(255,255,255,0.40);
+  letter-spacing: 0.12em;
+  margin: 0;
+
+  .title-accent {
+    color: rgba(94,106,210,0.90);
+  }
+}
+
+.toolbar-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.auth-badge {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 12px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 8px;
+  font-size: 10px;
+  font-family: 'JetBrains Mono', monospace;
+  color: rgba(255,255,255,0.35);
+  letter-spacing: 0.10em;
+  transition: all 0.2s ease;
+
+  mat-icon {
+    font-size: 14px;
+    width: 14px; height: 14px;
+    color: rgba(94,106,210,0.6);
+  }
+
+  &:hover {
+    background: rgba(255,255,255,0.06);
+    color: rgba(255,255,255,0.55);
+  }
+}
+
+.logout-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px; height: 36px;
+  background: rgba(239,68,68,0.06);
+  border: 1px solid rgba(239,68,68,0.12);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+
+  mat-icon {
+    font-size: 18px;
+    width: 18px; height: 18px;
+    color: rgba(239,68,68,0.55);
+    transition: color 0.2s ease;
+  }
+
+  &:hover {
+    background: rgba(239,68,68,0.12);
+    border-color: rgba(239,68,68,0.25);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(239,68,68,0.15);
+
+    mat-icon { color: rgba(239,68,68,0.85); }
+  }
+
+  &:active { transform: scale(0.96); }
+}
+
+// ─── Router Area ──────────────────────────────────────────────────────────────
+.router-area {
+  flex: 1;
+  padding: 28px;
+  overflow-y: auto;
   background: transparent;
+  animation: fade-up 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
-.toolbar-spacer { flex: 1; }
+// ─── Animations ───────────────────────────────────────────────────────────────
+@keyframes float-slow {
+  0%, 100% { transform: translateY(0px) rotate(0deg) scale(1); }
+  33%       { transform: translateY(-18px) rotate(0.8deg) scale(1.01); }
+  66%       { transform: translateY(-8px) rotate(-0.5deg) scale(0.99); }
+}
+
+@keyframes float-medium {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50%       { transform: translateY(-24px) rotate(1.2deg); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.7; }
+  50%       { opacity: 1; }
+}
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+// ─── Reduced motion ───────────────────────────────────────────────────────────
+@media (prefers-reduced-motion: reduce) {
+  .blob { animation: none !important; }
+  .router-area { animation: none !important; }
+  .status-dot { animation: none !important; }
+}

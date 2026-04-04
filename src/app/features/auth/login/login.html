@@ -1,104 +1,99 @@
-<div class="login-wrapper">
+<div class="login-root">
 
-  <!-- Animated background particles -->
-  <div class="bg-grid"></div>
-  <div class="corner-decoration top-left"></div>
-  <div class="corner-decoration top-right"></div>
-  <div class="corner-decoration bottom-left"></div>
-  <div class="corner-decoration bottom-right"></div>
+  <!-- Ambient blobs -->
+  <div class="blob blob-a" aria-hidden="true"></div>
+  <div class="blob blob-b" aria-hidden="true"></div>
+  <div class="blob blob-c" aria-hidden="true"></div>
+  <div class="grid" aria-hidden="true"></div>
 
-  <div class="split-container">
+  <div class="login-card">
 
-    <!-- ── LEFT SIDE ── -->
-    <div class="info-side">
-      <div class="top-bar">
-        <div class="system-id">SYS://REGISTRAR_MODULE_v2.0</div>
-        <div class="status-badge">
+    <!-- ── Left Panel ───────────────────────────────────────────────────── -->
+    <div class="left-panel">
+      <div class="left-top">
+        <div class="sys-id">SYS://REGISTRAR_v2.0</div>
+        <div class="online-badge">
           <span class="pulse-dot"></span>
-          SYSTEM ONLINE
+          ONLINE
         </div>
       </div>
 
-      <div class="info-content">
-        <div class="title-block">
-          <div class="title-label">// PLATFORM</div>
-          <h2>Registrar<br><span class="green-text">Management</span><br>System</h2>
-          <div class="title-underline"></div>
+      <div class="left-body">
+        <div class="left-logo">
+          <mat-icon>school</mat-icon>
         </div>
 
-        <p class="description">
+        <h2 class="left-title">
+          Registrar<br/>
+          <span class="title-accent">Management</span><br/>
+          System
+        </h2>
+
+        <p class="left-desc">
           Core administrative hub for authorized registrars. Manage student records,
-          curriculum structures, and enrollment protocols with real-time data synchronization.
+          curriculum structures, and enrollment workflows.
         </p>
 
         <ul class="feature-list">
           <li>
             <div class="feature-icon"><mat-icon>verified_user</mat-icon></div>
-            <div class="feature-text">
-              <span class="feature-title">Encrypted Data Access</span>
-              <span class="feature-sub">AES-256 end-to-end encryption</span>
+            <div>
+              <div class="feature-name">Encrypted Data Access</div>
+              <div class="feature-sub">AES-256 end-to-end encryption</div>
             </div>
           </li>
           <li>
             <div class="feature-icon"><mat-icon>analytics</mat-icon></div>
-            <div class="feature-text">
-              <span class="feature-title">Real-time Tracking</span>
-              <span class="feature-sub">Live enrollment synchronization</span>
+            <div>
+              <div class="feature-name">Real-time Tracking</div>
+              <div class="feature-sub">Live enrollment synchronization</div>
             </div>
           </li>
           <li>
             <div class="feature-icon"><mat-icon>history</mat-icon></div>
-            <div class="feature-text">
-              <span class="feature-title">Audit Logs Active</span>
-              <span class="feature-sub">Full activity trail maintained</span>
+            <div>
+              <div class="feature-name">Audit Logs Active</div>
+              <div class="feature-sub">Full activity trail maintained</div>
             </div>
           </li>
         </ul>
       </div>
 
-      <div class="info-footer">
-        <div class="footer-divider"></div>
-        <div class="footer-row">
-          <span class="footer-copy">© 2026 Global School Systems</span>
-          <span class="footer-tag">SECURE TERMINAL</span>
-        </div>
+      <div class="left-footer">
+        <span>© 2026 Global School Systems</span>
+        <span class="footer-tag">SECURE TERMINAL</span>
       </div>
     </div>
 
-    <!-- ── RIGHT SIDE ── -->
-    <div class="form-side">
-      <div class="form-inner">
+    <!-- ── Right Panel ──────────────────────────────────────────────────── -->
+    <div class="right-panel">
+      <div class="form-wrap">
 
-        <div class="login-header">
-          <div class="logo-wrap">
-            <div class="logo-hex">
-              <mat-icon>school</mat-icon>
-            </div>
-            <div class="logo-rings">
-              <div class="ring ring-1"></div>
-              <div class="ring ring-2"></div>
-            </div>
+        <div class="form-header">
+          <div class="form-icon">
+            <mat-icon>lock</mat-icon>
           </div>
-          <div class="header-text">
-            <h1>Authorized Access</h1>
-            <p class="header-sub">// PLEASE IDENTIFY YOURSELF</p>
+          <div>
+            <h1>Welcome back</h1>
+            <p class="form-sub">Sign in to your account</p>
           </div>
         </div>
 
-        <div class="form-fields">
+        <div class="fields">
           <div class="field-group">
-            <div class="field-label">IDENTITY TAG</div>
-            <mat-form-field appearance="fill" class="cyber-field full-width">
-              <input matInput type="email" [(ngModel)]="email" name="email" placeholder="user@domain.com" />
-              <mat-icon matSuffix>vpn_key</mat-icon>
+            <label class="field-label">Email address</label>
+            <mat-form-field appearance="outline" class="lnr-field full-width">
+              <input matInput type="email" [(ngModel)]="email"
+                     placeholder="you@example.com" />
+              <mat-icon matSuffix>alternate_email</mat-icon>
             </mat-form-field>
           </div>
 
           <div class="field-group">
-            <div class="field-label">ACCESS CODE</div>
-            <mat-form-field appearance="fill" class="cyber-field full-width">
+            <label class="field-label">Password</label>
+            <mat-form-field appearance="outline" class="lnr-field full-width">
               <input matInput [type]="hidePassword ? 'password' : 'text'"
-                     [(ngModel)]="password" name="password" placeholder="••••••••••••" />
+                     [(ngModel)]="password" placeholder="••••••••" />
               <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword">
                 <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
               </button>
@@ -113,21 +108,19 @@
           </div>
         }
 
-        <button mat-flat-button class="cyber-button" (click)="login()" [disabled]="loading">
-          <div class="button-content-wrapper">
-            @if (loading) {
-              <mat-spinner diameter="20" class="white-spinner"></mat-spinner>
-              <span class="loading-text">ESTABLISHING CONNECTION...</span>
-            } @else {
-              <span class="btn-text">INITIALIZE ACCESS</span>
-              <mat-icon class="btn-icon">arrow_forward</mat-icon>
-            }
-          </div>
+        <button class="submit-btn" (click)="login()" [disabled]="loading">
+          @if (loading) {
+            <mat-spinner diameter="18" class="btn-spinner"></mat-spinner>
+            <span>Signing in...</span>
+          } @else {
+            <span>Sign in</span>
+            <mat-icon>arrow_forward</mat-icon>
+          }
         </button>
 
-        <div class="security-seal">
-          <mat-icon>lock</mat-icon>
-          <span>End-to-End Encryption Active</span>
+        <div class="security-note">
+          <mat-icon>shield</mat-icon>
+          <span>Protected by end-to-end encryption</span>
         </div>
 
       </div>
